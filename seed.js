@@ -1,48 +1,105 @@
 require("dotenv").config();
+
 const mongoose = require("mongoose");
+const connectDB = require("./config/db");
+
 const Category = require("./models/categoryModel");
 const Product = require("./models/productModel");
+const Order = require("./models/orderModel");
+
 const seedData = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await connectDB();
 
-    console.log("MongoDB Connected");
-
+    await Order.deleteMany();
     await Product.deleteMany();
     await Category.deleteMany();
 
-    const category = await Category.create({
-      name: "Electronics",
-      description: "Electronic devices",
-    });
-
-    await Product.insertMany([
+    const categories = await Category.insertMany([
       {
-        name: "Lenovo Legion 5",
-        price: 45000,
-        stock: 10,
-        category: category._id,
+        name: "Electronics",
+        description: "Electronic devices",
+        slug: "electronics",
       },
       {
-        name: "Dell XPS 13",
-        price: 55000,
-        stock: 7,
-        category: category._id,
+        name: "Gaming",
+        description: "Gaming products",
+        slug: "gaming",
       },
       {
-        name: "HP Victus",
-        price: 39000,
-        stock: 15,
-        category: category._id,
+        name: "Accessories",
+        description: "Computer accessories",
+        slug: "accessories",
       },
     ]);
 
-    console.log("Data Seeded Successfully");
+    const products = [
+      {
+        name: "Lenovo Legion 5",
+        description: "Gaming Laptop",
+        price: 45000,
+        stock: 10,
+        category: categories[1]._id,
+        images: [],
+        inStock: true,
+      },
+      {
+        name: "ASUS ROG Strix",
+        description: "High Performance Gaming Laptop",
+        price: 52000,
+        stock: 8,
+        category: categories[1]._id,
+        images: [],
+        inStock: true,
+      },
+      {
+        name: "Dell XPS 13",
+        description: "Ultrabook Laptop",
+        price: 55000,
+        stock: 6,
+        category: categories[0]._id,
+        images: [],
+        inStock: true,
+      },
+      {
+        name: "HP Victus",
+        description: "Gaming Laptop",
+        price: 39000,
+        stock: 12,
+        category: categories[0]._id,
+        images: [],
+        inStock: true,
+      },
+      {
+        name: "Logitech G502 Mouse",
+        description: "Gaming Mouse",
+        price: 2500,
+        stock: 25,
+        category: categories[2]._id,
+        images: [],
+        inStock: true,
+      },
+      {
+        name: "Redragon K552 Keyboard",
+        description: "Mechanical Keyboard",
+        price: 1800,
+        stock: 20,
+        category: categories[2]._id,
+        images: [],
+        inStock: true,
+      },
+    ];
 
-    process.exit(0);
+    await Product.insertMany(products);
+
+    console.log("Database seeded successfully!");
+    console.log(`Categories Added: ${categories.length}`);
+    console.log(`Products Added: ${products.length}`);
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    console.error("Error seeding database:", error);
+  } finally {
+    await mongoose.disconnect();
+    console.log("MongoDB Disconnected");
   }
 };
 
