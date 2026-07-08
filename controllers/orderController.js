@@ -2,27 +2,25 @@ const Order = require("../models/orderModel");
 const Cart = require("../models/cartModel");
 const asyncHandler = require("../utils/asyncHandler");
 
-// Checkout
 const checkout = asyncHandler(async (req, res) => {
   const { user } = req.body;
 
-  // Get user's cart
   const cart = await Cart.findOne({ user }).populate("items.product");
 
   if (!cart || cart.items.length === 0) {
     return res.status(400).json({
+      status: "fail",
       message: "Cart is empty",
+      data: null,
     });
   }
 
-  // Calculate total price
   let totalPrice = 0;
 
   cart.items.forEach((item) => {
     totalPrice += item.product.price * item.quantity;
   });
 
-  // Create order
   const order = await Order.create({
     user,
     items: cart.items.map((item) => ({
@@ -33,13 +31,13 @@ const checkout = asyncHandler(async (req, res) => {
     status: "pending",
   });
 
-  // Clear cart
   cart.items = [];
   await cart.save();
 
   res.status(201).json({
+    status: "success",
     message: "Order placed successfully",
-    order,
+    data: order,
   });
 });
 
