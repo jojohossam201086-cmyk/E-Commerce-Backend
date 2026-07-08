@@ -1,0 +1,36 @@
+const errorHandler = (err, req, res, next) => {
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      status: "fail",
+      message: "Invalid ID",
+    });
+  }
+
+  if (err.code === 11000) {
+    return res.status(409).json({
+      status: "fail",
+      message: "Duplicate value entered",
+    });
+  }
+
+  if (err.isOperational) {
+    return res.status(err.statusCode).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+
+  return res.status(500).json({
+    status: "error",
+    message: "Internal Server Error",
+  });
+};
+
+module.exports = errorHandler;

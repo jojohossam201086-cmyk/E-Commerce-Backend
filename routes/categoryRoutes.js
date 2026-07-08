@@ -16,7 +16,7 @@ router.route("/")
 
 router.route("/:id")
   .get(getCategory)
-  .put(updateCategory)
+  .patch(updateCategory)
   .delete(deleteCategory);
 
 module.exports = router;
