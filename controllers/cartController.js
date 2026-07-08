@@ -1,7 +1,6 @@
 const Cart = require("../models/cartModel");
 const asyncHandler = require("../utils/asyncHandler");
 
-// Add Product To Cart
 const addToCart = asyncHandler(async (req, res) => {
   const { user, product, quantity } = req.body;
 
@@ -29,10 +28,13 @@ const addToCart = asyncHandler(async (req, res) => {
 
   await cart.save();
 
-  res.status(200).json(cart);
+  res.status(200).json({
+    status: "success",
+    message: "Product added to cart successfully",
+    data: cart,
+  });
 });
 
-// Get Cart
 const getCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({
     user: req.params.user,
@@ -40,14 +42,19 @@ const getCart = asyncHandler(async (req, res) => {
 
   if (!cart) {
     return res.status(404).json({
+      status: "fail",
       message: "Cart not found",
+      data: null,
     });
   }
 
-  res.status(200).json(cart);
+  res.status(200).json({
+    status: "success",
+    message: "Cart fetched successfully",
+    data: cart,
+  });
 });
 
-// Remove Item From Cart
 const removeItem = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({
     user: req.params.user,
@@ -55,7 +62,9 @@ const removeItem = asyncHandler(async (req, res) => {
 
   if (!cart) {
     return res.status(404).json({
+      status: "fail",
       message: "Cart not found",
+      data: null,
     });
   }
 
@@ -65,10 +74,13 @@ const removeItem = asyncHandler(async (req, res) => {
 
   await cart.save();
 
-  res.status(200).json(cart);
+  res.status(200).json({
+    status: "success",
+    message: "Item removed successfully",
+    data: cart,
+  });
 });
 
-// Clear Cart
 const clearCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({
     user: req.params.user,
@@ -76,7 +88,9 @@ const clearCart = asyncHandler(async (req, res) => {
 
   if (!cart) {
     return res.status(404).json({
+      status: "fail",
       message: "Cart not found",
+      data: null,
     });
   }
 
@@ -85,7 +99,9 @@ const clearCart = asyncHandler(async (req, res) => {
   await cart.save();
 
   res.status(200).json({
+    status: "success",
     message: "Cart cleared successfully",
+    data: null,
   });
 });
 
