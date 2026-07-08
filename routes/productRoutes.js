@@ -16,7 +16,7 @@ router.route("/")
 
 router.route("/:id")
   .get(getProduct)
-  .put(updateProduct)
+  .patch(updateProduct)
   .delete(deleteProduct);
 
 module.exports = router;
