@@ -33,10 +33,8 @@ const errorHandler = (err, req, res, next) => {
 
   return res.status(500).json({
     status: "error",
-    message: err.message,
-    stack: err.stack,
+    message: "Internal Server Error",
     data: null,
-  });
-}
+  })};
 
 module.exports = errorHandler;
