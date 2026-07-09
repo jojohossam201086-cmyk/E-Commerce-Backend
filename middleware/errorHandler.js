@@ -3,6 +3,7 @@ const errorHandler = (err, req, res, next) => {
     return res.status(400).json({
       status: "fail",
       message: err.message,
+      data: null,
     });
   }
 
@@ -10,6 +11,7 @@ const errorHandler = (err, req, res, next) => {
     return res.status(400).json({
       status: "fail",
       message: "Invalid ID",
+      data: null,
     });
   }
 
@@ -17,6 +19,7 @@ const errorHandler = (err, req, res, next) => {
     return res.status(409).json({
       status: "fail",
       message: "Duplicate value entered",
+      data: null,
     });
   }
 
@@ -24,13 +27,16 @@ const errorHandler = (err, req, res, next) => {
     return res.status(err.statusCode).json({
       status: "fail",
       message: err.message,
+      data: null,
     });
   }
 
   return res.status(500).json({
     status: "error",
-    message: "Internal Server Error",
+    message: err.message,
+    stack: err.stack,
+    data: null,
   });
-};
+}
 
 module.exports = errorHandler;
