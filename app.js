@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const express = require("express");
 const mongoSanitize = require("express-mongo-sanitize");
 
